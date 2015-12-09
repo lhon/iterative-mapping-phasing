@@ -13,7 +13,7 @@ SUBDIR=$4
 IDSUBSET=$5 # optional
 
 # more params
-MIN_QUAL=50
+MIN_QUAL=30
 
 # get path to scripts
 # http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
@@ -43,8 +43,7 @@ samtools view -bS all.sam | samtools sort - all.sorted
 samtools index all.sorted.bam
 
 echo identify high quality SNPs
-samtools mpileup -I -vf ~/fasta/hg19_M_sorted.fasta -r $GENOMIC_COORDINATES all.sorted.bam | bcftools call -c -v - > var-all.vcf
-awk -v min_qual=$MIN_QUAL '{ if (substr($1,1,1) == "#" || $6 >= min_qual) print $0 }' var-all.vcf > var-subset.vcf
+samtools mpileup -I -vf ~/fasta/hg19_M_sorted.fasta -r $GENOMIC_COORDINATES all.sorted.bam | bcftools call -c -v - | bcftools filter -i"%QUAL>$MIN_QUAL" > var-subset.vcf
 
 echo build simulated paired end dataset
 python $SCRIPT_PATH/pair.py all.sam all-paired.sam $GENOMIC_COORDINATES

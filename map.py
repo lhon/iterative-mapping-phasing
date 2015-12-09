@@ -49,6 +49,7 @@ class SAMConsumer:
     
     def consume(self, filename):
         write_mode = 'w' if self.first else 'a'
+# TODO 12/4/2015 errors out if filename doesn't exist, which happens on first run
         with open(self.outf_filename, write_mode) as fout:
             for line in open(filename):
                 if line.startswith('@'):
@@ -93,22 +94,25 @@ def map_segments(input_fasta, ref_fa, out_filename, subset_prefix):
     ref_ctab = ref_fa+'.ctab'
     
     while True:
-        cmd = 'blasr {query_fa} {ref_fa} -sa {ref_sa} -ctab {ref_ctab} -bestn 1 -nproc 24 -sam -noSplitSubreads -out out.sam'.format(
+#        cmd = 'blasr {query_fa} {ref_fa} -sa {ref_sa} -ctab {ref_ctab} -bestn 1 -nproc 24 -sam -noSplitSubreads -indelRate 0.1 -sdpIns 100 -sdpDel 100 -minPctIdentity 90 -out out.sam'.format(
+        cmd = 'blasr {query_fa} {ref_fa} -sa {ref_sa} -ctab {ref_ctab} -bestn 1 -nproc 24 -sam -noSplitSubreads -indelRate 0.1 -sdpIns 100 -sdpDel 100 -out out.sam'.format(
+#        cmd = 'blasr {query_fa} {ref_fa} -sa {ref_sa} -ctab {ref_ctab} -bestn 1 -nproc 24 -sam -noSplitSubreads -out out.sam'.format(
             query_fa=query_fa, ref_fa=ref_fa, ref_sa=ref_sa, ref_ctab=ref_ctab)
         #print cmd
         os.system(cmd)
 
         count = 0
-        min_segment = 200
+        min_segment = 20
+        wiggle = 10
         with open(query_fa, 'w') as f:
             for id, qstart, qend, range_start, range_end in sam_consumer.consume('out.sam'):
-                if range_start < qstart-min_segment:
+                if qstart-range_start > min_segment:
                     start = range_start
-                    end = qstart
+                    end = min(qstart+wiggle, range_end)
                     print >>f, as_fasta('%s/%d_%d' % (id, start, end), 'N'*start + seqs[id][start:end])
                     count += 1
-                if range_end > qend+min_segment:
-                    start = qend
+                if range_end-qend > min_segment:
+                    start = max(qend-wiggle, range_start)
                     end = range_end
                     print >>f, as_fasta('%s/%d_%d' % (id, start, end), 'N'*start + seqs[id][start:end])
                     count += 1
