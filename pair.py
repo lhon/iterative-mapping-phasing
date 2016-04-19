@@ -5,22 +5,23 @@ import copy
 
 def setup_pairing(f, group):
     # encode sam output as paired end
+    # using only adjacent mappings as pairs
     id = group[0][0].replace("/ccs", "")
     for i in range(len(group)-1):
-        for j in range(i+1, len(group)):
-            c1 = copy.copy(group[i])
-            c2 = copy.copy(group[j])
-            c1[1] = str(int(c1[1]) | 0x1 | 0x2 | 0x40)
-            c2[1] = str(int(c2[1]) | 0x1 | 0x2 | 0x80)
-            c1[0] = id
-            c2[0] = id
-            c1[6] = '='
-            c2[6] = '='
-            c1[7] = c2[3]
-            c2[7] = c1[3]
+        j = i+1
+        c1 = copy.copy(group[i])
+        c2 = copy.copy(group[j])
+        c1[1] = str(int(c1[1]) | 0x1 | 0x2 | 0x40)
+        c2[1] = str(int(c2[1]) | 0x1 | 0x2 | 0x80)
+        c1[0] = id
+        c2[0] = id
+        c1[6] = '='
+        c2[6] = '='
+        c1[7] = c2[3]
+        c2[7] = c1[3]
 
-            print >>f, '\t'.join(c1)
-            print >>f, '\t'.join(c2)
+        print >>f, '\t'.join(c1)
+        print >>f, '\t'.join(c2)
 
 def run(input_filename, output_filename, genomic_coordinates):
     target_chrom, coord_range = genomic_coordinates.split(':')
@@ -39,7 +40,8 @@ def run(input_filename, output_filename, genomic_coordinates):
             break
 
     # sort by read id
-    p = subprocess.Popen(["sort", input_filename], stdout = subprocess.PIPE)
+    # sort -k1,1 -k14.7n all.sam
+    p = subprocess.Popen(["sort", "-k1,1", "-k14.7n", input_filename], stdout = subprocess.PIPE)
     fh = cStringIO.StringIO(p.communicate()[0])
     last_id = None
     group = []
