@@ -49,7 +49,6 @@ class SAMConsumer:
     
     def consume(self, filename):
         write_mode = 'w' if self.first else 'a'
-# TODO 12/4/2015 errors out if filename doesn't exist, which happens on first run
         with open(self.outf_filename, write_mode) as fout:
             for line in open(filename):
                 if line.startswith('@'):
@@ -82,8 +81,8 @@ class SAMConsumer:
 def map_segments(input_fasta, ref_fa, out_filename, subset_prefix):
     seqs = dict([id, seq] for id, seq, _ in readfq(open(input_fasta)) if subset_prefix is None or id.startswith(subset_prefix))
     ranges = [(id, 0, len(seq)) for id, seq in seqs.iteritems()]
-    
     query_fa = 'temp.fasta'
+    
     with open(query_fa, 'w') as f:
         for id, start, end in ranges:
             print >>f, as_fasta('%s/%d_%d' % (id, start, end), seqs[id][start:end])
@@ -94,11 +93,8 @@ def map_segments(input_fasta, ref_fa, out_filename, subset_prefix):
     ref_ctab = ref_fa+'.ctab'
     
     while True:
-#        cmd = 'blasr {query_fa} {ref_fa} -sa {ref_sa} -ctab {ref_ctab} -bestn 1 -nproc 24 -sam -noSplitSubreads -indelRate 0.1 -sdpIns 100 -sdpDel 100 -minPctIdentity 90 -out out.sam'.format(
         cmd = 'blasr {query_fa} {ref_fa} -sa {ref_sa} -ctab {ref_ctab} -bestn 1 -nproc 24 -sam -noSplitSubreads -indelRate 0.1 -sdpIns 100 -sdpDel 100 -out out.sam'.format(
-#        cmd = 'blasr {query_fa} {ref_fa} -sa {ref_sa} -ctab {ref_ctab} -bestn 1 -nproc 24 -sam -noSplitSubreads -out out.sam'.format(
             query_fa=query_fa, ref_fa=ref_fa, ref_sa=ref_sa, ref_ctab=ref_ctab)
-        #print cmd
         os.system(cmd)
 
         count = 0
