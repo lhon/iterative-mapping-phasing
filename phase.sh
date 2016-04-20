@@ -45,14 +45,14 @@ samtools index all.sorted.bam
 echo identify high quality SNPs
 samtools mpileup -I -vf ~/fasta/hg19_M_sorted.fasta -r $GENOMIC_COORDINATES all.sorted.bam | bcftools call -c -v - | bcftools filter -i"%QUAL>$MIN_QUAL" > var-subset.vcf
 
-echo build simulated paired end dataset
+echo represent mapped segments on the same molecule \(ZMW\) as paired end reads
 python $SCRIPT_PATH/pair.py all.sam all-paired.sam $GENOMIC_COORDINATES
 samtools view -bS all-paired.sam | samtools sort - all-paired.sorted
 samtools index all-paired.sorted.bam
 
 echo run HAPCUT
-extractHAIRS --VCF var-subset.vcf --bam all-paired.sorted.bam --maxIS 10000000 > fragment_matrix_file
-HAPCUT --fragments fragment_matrix_file --VCF var-subset.vcf --output output_haplotype_file --maxiter 100 > hapcut.log
+$SCRIPT_PATH/extractHAIRS --VCF var-subset.vcf --bam all-paired.sorted.bam --maxIS 10000000 > fragment_matrix_file
+$SCRIPT_PATH/HAPCUT --fragments fragment_matrix_file --VCF var-subset.vcf --output output_haplotype_file --maxiter 100 > hapcut.log
 
 
 
