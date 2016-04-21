@@ -7,6 +7,12 @@ This repository describes a workflow that takes a [Cergentis TLA](http://www.cer
 Installation
 -------------
 
+To use the scripts, first download or clone this repository, e.g.
+
+```
+git clone https://github.com/lhon/iterative-mapping-phasing.git
+```
+
 The scripts require BLASR, samtools, and bcftools to be in your path. One way to get the first three tools is to install them using [LinuxBrew](http://brew.sh/linuxbrew/):
 
 ```
