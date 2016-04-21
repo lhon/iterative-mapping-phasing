@@ -28,7 +28,7 @@ samtools=1.2
 bcftools=1.2
 ```
 
-HAPCUT was recompiled with a change to allow paired end analysis to work properly, and the resulting binaries have been included in this repository. The change is documented at https://github.com/lhon/hapcut 
+[HAPCUT](https://sites.google.com/site/vibansal/software/hapcut) was recompiled with a change to allow paired end analysis to work properly, and the resulting binaries have been included in this repository. The change is documented at https://github.com/lhon/hapcut 
 
 Running
 ----------
