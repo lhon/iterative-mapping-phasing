@@ -22,9 +22,7 @@ samtools=1.2
 bcftools=1.2
 ```
 
-HAPCUT was recompiled with a change to allow paired end analysis to work properly, and the resulting binaries have been included in this repository. The change is documented here:
-
-https://github.com/lhon/hapcut
+HAPCUT was recompiled with a change to allow paired end analysis to work properly, and the resulting binaries have been included in this repository. The change is documented at https://github.com/lhon/hapcut 
 
 Running
 ----------
@@ -53,3 +51,4 @@ Each read typically consists of several segments ligated together, generally fro
 
 The phasing is performed by HAPCUT, which supports mate pair style reads. Because the Cergentis/PacBio data can have more than two segment per read, the data needs to be represented in a mate pair style manner. This is done via `pair.py`.
 
+Analysis of BRCA1 using this workflow was presented at [AGBT 2016](http://www.pacb.com/wp-content/uploads/chromosomal-scale-targeted-haplotype-assembly-long-range-data-from-tla-smrt-sequencing.pdf).
