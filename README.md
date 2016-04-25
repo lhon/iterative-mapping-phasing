@@ -2,7 +2,7 @@
 Iterative Mapping and Phasing
 -------------
 
-This repository describes a workflow that takes a [Cergentis TLA](http://www.cergentis.com/tla-technology/tla-technology) prepared sample sequenced on PacBio&reg; and extracts phasing information based on heterozygous SNPs.
+This repository describes a workflow that takes a [Cergentis TLA](http://www.cergentis.com/tla-technology/tla-technology) prepared sample sequenced on a PacBio&reg; RS II and extracts phasing information based on heterozygous SNPs.
 
 Installation
 -------------
