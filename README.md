@@ -7,19 +7,19 @@ This repository describes a workflow that takes a [Cergentis TLA](http://www.cer
 Installation
 -------------
 
-To use the scripts, first download or clone this repository, e.g.
+To use the scripts, first clone this repository:
 
 ```
 git clone https://github.com/lhon/iterative-mapping-phasing.git
 ```
 
-The scripts require BLASR, samtools, and bcftools to be in your path. One way to get the first three tools is to install them using [LinuxBrew](http://brew.sh/linuxbrew/):
+The scripts require BLASR, samtools, and bcftools to be in your path. One way to get these tools is to install them using [LinuxBrew](http://brew.sh/linuxbrew/):
 
 ```
 brew install blasr samtools bcftools
 ```
 
-The workflow was tested with these versions of the software on Linux:
+The workflow was tested with the following software versions on Linux:
 
 ```
 python=2.7
@@ -28,20 +28,20 @@ samtools=1.2
 bcftools=1.2
 ```
 
-[HAPCUT](https://sites.google.com/site/vibansal/software/hapcut) was recompiled with a change to allow paired end analysis to work properly, and the resulting binaries have been included in this repository. The change is documented at https://github.com/lhon/hapcut 
+[HAPCUT](https://sites.google.com/site/vibansal/software/hapcut) was recompiled with a change to allow paired end analysis to work properly; the resulting binaries are included in this repository. The change is documented at https://github.com/lhon/hapcut 
 
 Running
 ----------
 
 First generate Reads of Insert from SMRT&reg; cell data. The easiest way is to use the `RS_ReadsOfInsert` protocol in SMRT Portal, using default parameters.
 
-The data from `reads_of_insert.fasta` can then be aligned and phased using an invocation similar to this:
+The data from `reads_of_insert.fasta` can then be aligned and phased using a command similar to this:
 
 ```
 /path/to/phase.sh reads_of_insert.fasta hg19.fasta chr17:41,194,312-41,279,500 output_dir/
 ```
 
-This does the following steps:
+This performs the following steps:
 
 * Iteratively aligns `reads_of_insert.fasta` to `hg19.fasta` using `map.py` and `blasr`
 * Determines SNPs in BRCA1 (`chr17:41,194,312-41,279,500`) using `samtools` and `bcftools`
